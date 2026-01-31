@@ -10,6 +10,7 @@ import {
   Animated,
   Keyboard,
   Alert,
+  BackHandler,
 } from "react-native";
 
 import { Colors } from "@/constants/theme";
@@ -129,7 +130,7 @@ export default function QuizGame() {
 
   const difficulty = Math.floor(score / 5);
 
-  const confirmExit = () => {
+  const confirmExit = useCallback(() => {
     if (gameOver) {
       router.back();
       return;
@@ -163,7 +164,27 @@ export default function QuizGame() {
         },
       ],
     );
-  };
+  }, [
+    score,
+    correctCount,
+    wrongCount,
+    bestStreak,
+    gameOver,
+    statsSaved,
+    router,
+    updateGameStats,
+  ]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        confirmExit();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [confirmExit]);
 
   useEffect(() => {
     if (gameOver && !statsSaved) {

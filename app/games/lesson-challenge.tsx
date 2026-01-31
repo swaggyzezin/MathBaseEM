@@ -9,6 +9,7 @@ import {
   Animated,
   ScrollView,
   Alert,
+  BackHandler,
 } from "react-native";
 
 import { Colors } from "@/constants/theme";
@@ -530,6 +531,17 @@ export default function LessonChallengeGame() {
     statsSaved,
     selectedModule,
   ]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        confirmExit();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [confirmExit]);
 
   useEffect(() => {
     if (gameOver && !statsSaved) {

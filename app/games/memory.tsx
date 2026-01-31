@@ -9,6 +9,7 @@ import {
   Animated,
   Dimensions,
   Alert,
+  BackHandler,
 } from "react-native";
 
 import { Colors } from "@/constants/theme";
@@ -296,6 +297,17 @@ export default function MemoryGame() {
     gameComplete,
     statsSaved,
   ]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        confirmExit();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [confirmExit]);
 
   useEffect(() => {
     if (gameComplete && !statsSaved) {

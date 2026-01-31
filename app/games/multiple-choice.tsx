@@ -8,6 +8,7 @@ import {
   View,
   Animated,
   Alert,
+  BackHandler,
 } from "react-native";
 
 import { Colors } from "@/constants/theme";
@@ -181,6 +182,17 @@ export default function MultipleChoiceGame() {
     gameOver,
     statsSaved,
   ]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        confirmExit();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [confirmExit]);
 
   useEffect(() => {
     if (gameOver && !statsSaved) {
